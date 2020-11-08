@@ -11,12 +11,14 @@ if [[ "$1" = plugin ]] {
 
 if (( ${+ICE[zman]} )) {
     local manfiles=${dir}/**/*.1
-    local manfile
-    for manfile in $~manfiles; do
+    local manfile installed
+    for manfile in $~manfiles(N); do
+        (( ${installed[(I)$manfile:t]} )) && continue
+        installed+=( $manfile:t )
         { test -f $manfile && [[ -d ${ZPFX}/man/man1 ]] } && {
                     (( !OPTS[opt_-q,--quiet] )) && \
                         print -P -- "%F{38}zman annex: %F{154}Installed man page: %F{219}$manfile:t%f"
-                    command mv $manfile ${ZPFX}/man/man1
+                    command mv -f -- $manfile ${ZPFX}/man/man1
                 } || {
                     (( !OPTS[opt_-q,--quiet] )) && \
                         print -P -- "%F{38}zman annex: %F{160}Could not install man page%f"
