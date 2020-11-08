@@ -5,14 +5,17 @@
 0="${${(M)0:#/*}:-$PWD/$0}"
 
 # Handler's are using the ":" symbol as the namespacer
-autoload -Uz :za-zman-atclone-handler
+autoload -Uz :za-zman-atclone-handler :za-zman-atdelete-handler
 
 # An empty stub to fill the help handler fields
 :za-zman-help-null-handler() { :; }
 
-@zinit-register-annex "z-a-mvman" hook:atclone-50 \
+@zinit-register-annex "z-a-zman" hook:atclone-50 \
         :za-zman-atclone-handler :za-zman-help-null-handler \
         "zman" # register a new ice-mod: man
 
-@zinit-register-annex "z-a-mvman" hook:%atpull-50 \
+@zinit-register-annex "z-a-zman" hook:%atpull-50 \
         :za-zman-atclone-handler :za-zman-help-null-handler
+
+@zinit-register-annex "z-a-zman" hook:atdelete-50 \
+    :za-zman-atdelete-handler :za-zman-help-null-handler
