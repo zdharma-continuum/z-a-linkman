@@ -10,7 +10,7 @@ if [[ "$1" = plugin ]] {
 }
 
 if (( ${+ICE[zman]} )) {
-    local manfiles=${dir}/**/*.1
+    local manfiles=${dir}/**/*.1(.)
     local manfile installed
     for manfile in $~manfiles(N); do
         (( ${installed[(I)$manfile:t]} )) && continue
