@@ -11,7 +11,7 @@ if [[ "$1" = plugin ]] {
 if (( ${+ICE2[zman]} )) {
     local manfiles=${dir}/**/*.1(.)
     local manfile installed
-    for manfile in $~manfiles(N); do
+    for manfile ( $~manfiles ); do
         (( ${installed[(I)$manfile:t]} )) && continue
         installed+=( $manfile:t )
         { test -f $manfile && [[ -d ${ZPFX}/man/man1 ]] } && {
