@@ -1,4 +1,4 @@
-:za-zman-atclone-handler() {
+:za-linkman-atclone-handler() {
 
 emulate -RL zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -9,7 +9,7 @@ if [[ "$1" = plugin ]] {
     local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
 }
 
-if (( ${+ICE[zman]} )) {
+if (( ${+ICE[lman]} )) {
     local manfiles=${dir}/**/*.1(.)
     local manfile installed
     for manfile ( $~manfiles ); do
@@ -17,11 +17,11 @@ if (( ${+ICE[zman]} )) {
         installed+=( $manfile:t )
         { test -f $manfile && [[ -d ${ZPFX}/man/man1 ]] } && {
                     (( !OPTS[opt_-q,--quiet] )) && \
-                        print -P -- "%F{38}zman annex: %F{154}Installed man page: %F{219}$manfile:t%f"
+                        print -P -- "%F{38}linkman annex: %F{154}Installed man page: %F{219}$manfile:t%f"
                     command ln -f -- $manfile ${ZPFX}/man/man1
                 } || {
                     (( !OPTS[opt_-q,--quiet] )) && \
-                        print -P -- "%F{38}zman annex: %F{160}Could not install man page%f"
+                        print -P -- "%F{38}linkman annex: %F{160}Could not install man page%f"
                 }
     done
     }
