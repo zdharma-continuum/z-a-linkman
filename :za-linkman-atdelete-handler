@@ -10,21 +10,27 @@ if [[ "$1" = plugin ]] {
 }
 
 if (( ${+ICE[lman]} )) {
+    [[ -d ${ZPFX}/man/man1 ]] || \
+        { print -P -- "%F{38}linkman annex: %F{160}Missing ${ZPFX}/man/man1, not deleting man pages%f" && return}
     local manfiles=${dir}/**/*.1(.)
-    local manfile installed
+    declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
-        (( ${installed[(I)$manfile:t]} )) && continue
-        installed+=( $manfile:t )
-        { test -f $manfile && [[ -d ${ZPFX}/man/man1 ]] } && {
-                    (( !OPTS[opt_-q,--quiet] )) && \
-                        print -P -- "%F{38}linkman annex: %F{154}Removed man page: %F{219}$manfile:t%f"
-                    command rm -f -- ${ZPFX}/man/man1/$manfile:t
-                } || {
-                    (( !OPTS[opt_-q,--quiet] )) && \
-                        print -P -- "%F{38}linkman annex: %F{160}Could not remove man page%f"
-                }
+        (( ${attempted[(I)$manfile:t]} )) && continue
+        attempted+=( $manfile:t )
+        { test -f $manfile } && {
+            installed+=( "%F{219}$manfile:t" )
+            command rm -f -- ${ZPFX}/man/man1/$manfile:t
+        } || {
+            failed+=( "%F{219}$manfile:t" )
+        }
     done
+    (( !OPTS[opt_-q,--quiet] )) && {
+        (( ${#installed} )) && \
+            print -P -- "%F{38}linkman annex: %F{154}Removed man page${${${#installed}/1/}:+s}: ${(j:%f, :)installed}%f"
+        (( ${#failed} )) && \
+            print -P -- "%F{38}linkman annex: %F{160}Could not remove man page${${${#failed}/1/}:+s}: ${(j:%f, :)failed}%f"
     }
+}
 
 }
 
