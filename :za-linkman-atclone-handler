@@ -12,7 +12,7 @@ if [[ "$1" = plugin ]] {
 if (( ${+ICE[lman]} )) {
     [[ -d ${ZPFX}/man/man1 ]] || \
         { print -P -- "%F{38}linkman annex: %F{160}Missing ${ZPFX}/man/man1, not installing man pages%f" && return}
-    local manfiles=${dir}/**/*.1(.)
+    local manfiles=${dir}/**/*(.1|.1.gz)(N.)
     declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
         (( ${attempted[(I)$manfile:t]} )) && continue
