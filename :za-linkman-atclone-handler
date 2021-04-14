@@ -9,7 +9,7 @@ if [[ "$1" = plugin ]] {
 
 if (( ${+ICE[lman]} )) {
     [[ -d ${ZPFX}/man/man1 ]] || \
-        { print -P -- "%F{38}linkman annex: %F{160}Missing ${ZPFX}/man/man1, not installing man pages%f" && return}
+        { +zinit-message "{pre}linkman annex: {warn}Warning: {msg}Missing {url}${ZPFX}/man/man1{msg}, not installing man pages{…}{rst}" && return}
     local manfiles=${dir}/**/*(.1|.1.gz)(N.)
     declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
@@ -24,8 +24,8 @@ if (( ${+ICE[lman]} )) {
     done
     (( !OPTS[opt_-q,--quiet] )) && {
         (( ${#installed} )) && \
-            print -P -- "%F{38}linkman annex: %F{154}Installed man page${${${#installed}/1/}:+s}: ${(j:%f, :)installed}%f"
+            +zinit-message "{pre}linkman annex: {msg}Installed man page${${${#installed}/1/}:+s}: ${(j:%f, :)installed}{rst}"
         (( ${#failed} )) && \
-            print -P -- "%F{38}linkman annex: %F{160}Could not install man page${${${#failed}/1/}:+s}: ${(j:%f, :)failed}%f"
+            +zinit-message "{pre}linkman annex: {error}Could not install man page${${${#failed}/1/}:+s}: ${(j:%f, :)failed}{rst}"
     }
 }
