@@ -1,5 +1,3 @@
-:za-linkman-atdelete-handler() {
-
 emulate -RL zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops
 
@@ -31,7 +29,3 @@ if (( ${+ICE[lman]} )) {
             print -P -- "%F{38}linkman annex: %F{160}Could not remove man page${${${#failed}/1/}:+s}: ${(j:%f, :)failed}%f"
     }
 }
-
-}
-
-# vim:ft=zsh:sw=4:sts=4:et
