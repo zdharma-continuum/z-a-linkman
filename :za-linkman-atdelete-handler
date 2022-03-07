@@ -10,22 +10,24 @@ if [[ "$1" = plugin ]] {
 if (( ${+ICE[lman]} )) {
     [[ -d ${ZPFX}/man/man1 ]] || \
         { +zinit-message "{pre}linkman annex: {warn}Warning: {msg}Missing {url}${ZPFX}/man/man1{msg}, not deleting man pages{…}{rst}" && return}
-    local manfiles=${dir}/**/*(.1|.1.gz)(N.)
+    local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
         (( ${attempted[(I)$manfile:t]} )) && continue
         attempted+=( $manfile:t )
         { test -f $manfile } && {
-            installed+=( "%F{219}$manfile:t" )
-            command rm -f -- ${ZPFX}/man/man1/$manfile:t
+            command rm -f -- "${ZPFX}/man/man${${${manfile:t}//[!1-9]}[-1]}/$manfile:t" && \
+            installed+=( "{obj}$manfile:t" )
         } || {
-            failed+=( "%F{219}$manfile:t" )
+            failed+=( "{obj}$manfile:t" )
         }
     done
-    (( !OPTS[opt_-q,--quiet] )) && {
-        (( ${#installed} )) && \
-            +zinit-message "{pre}linkman annex: {msg}Removed man page${${${#installed}/1/}:+s}: ${(j:%f, :)installed}{rst}"
-        (( ${#failed} )) && \
-            +zinit-message "{pre}linkman annex: {error}Could not remove man page${${${#failed}/1/}:+s}: ${(j:%f, :)failed}{rst}"
+    if (( !OPTS[opt_-q,--quiet] )) {
+        if (( ${#installed} )) {
+            +zinit-message "{pre}linkman annex: {msg}Removed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}{rst}"
+        }
+        if (( ${#failed} )) {
+            +zinit-message "{pre}linkman annex: {error}Could not remove man page${${${#failed}/1/}:+s}: ${(j:, :)failed}{rst}"
+        }
     }
 }
