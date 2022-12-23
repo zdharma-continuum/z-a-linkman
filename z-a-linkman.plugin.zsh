@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 # Standarized $0 handling, see:
 # http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html#zero-handling
 
@@ -13,12 +15,18 @@ autoload -Uz :za-linkman-atclone-handler :za-linkman-atdelete-handler
 # An empty stub to fill the help handler fields
 :za-linkman-help-null-handler() { :; }
 
-@zinit-register-annex "z-a-linkman" hook:atclone-50 \
-        :za-linkman-atclone-handler :za-linkman-help-null-handler \
-        "lman" # register a new ice-mod: lman
+@zinit-register-annex "z-a-linkman" \
+    hook:atclone-50 \
+    :za-linkman-atclone-handler \
+    :za-linkman-help-null-handler \
+    "lman" # register a new ice-mod: lman
 
-@zinit-register-annex "z-a-linkman" hook:atpull-50 \
-        :za-linkman-atclone-handler :za-linkman-help-null-handler
+@zinit-register-annex "z-a-linkman" \
+    hook:atpull-50 \
+    :za-linkman-atclone-handler \
+    :za-linkman-help-null-handler
 
-@zinit-register-annex "z-a-linkman" hook:atdelete-50 \
-        :za-linkman-atdelete-handler :za-linkman-help-null-handler
+@zinit-register-annex "z-a-linkman" \
+    hook:atdelete-50 \
+    :za-linkman-atdelete-handler \
+    :za-linkman-help-null-handler
