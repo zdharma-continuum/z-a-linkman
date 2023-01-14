@@ -11,7 +11,7 @@ fi
 
 if (( ${+ICE[lman]} )); then
     [[ -d ${ZPFX}/man/man1 ]] \
-        || { +zinit-message "{error}Warning:{rst} {b}patch-dl{rst}: Missing {url}${ZPFX}/man/man1{rst}, not installing man pages" && return }
+        || { +zinit-message "{warn}Warning:{rst} {b}lman{rst}: Missing {url}${ZPFX}/man/man1{rst}, not installing man pages" && return }
     local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
@@ -23,10 +23,10 @@ if (( ${+ICE[lman]} )); then
     done
     if (( !OPTS[opt_-q,--quiet] )); then
         if (( ${#installed} )); then
-            +zinit-message "{pre}==>{rst} {b}patch-dl{rst}: {msg}Installed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}{rst}"
+            +zinit-message "{pre}==>{rst} {b}lman{rst}: {msg}Installed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}{rst}"
         fi
         if (( ${#failed} )); then
-            +zinit-message "{error}Error:{rst} {b}patch-dl{rst}: Could not install man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
+            +zinit-message "{error}Error:{rst} {b}lman{rst}: Could not install man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
         fi
     fi
 fi
