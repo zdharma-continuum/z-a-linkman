@@ -10,8 +10,8 @@ else
 fi
 
 if (( ${+ICE[lman]} )); then
-    [[ -d ${ZPFX}/man/man1 ]] \
-        || { +zinit-message "{pre}linkman annex: {warn}Warning: {msg}Missing {url}${ZPFX}/man/man1{msg}, not installing man pages{…}{rst}" && return }
+    [[ -d ${ZPFX}/man/man1 ]] || {
+        +zinit-message "{log-warn} {ice}linkman{rst} Missing {file}${ZPFX}/man/man1{rst}, skipped installing man pages" && return }
     local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
     for manfile ( $~manfiles ); do
@@ -23,10 +23,10 @@ if (( ${+ICE[lman]} )); then
     done
     if (( !OPTS[opt_-q,--quiet] )); then
         if (( ${#installed} )); then
-            +zinit-message "{pre}linkman annex: {msg}Installed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}{rst}"
+            +zinit-message "{log-msg} {ice}linkman{rst} Installed man page ${${${#installed}/1/}:+s}: ${(j:, :)installed}"
         fi
         if (( ${#failed} )); then
-            +zinit-message "{pre}linkman annex: {error}Could not install man page${${${#failed}/1/}:+s}: ${(j:, :)failed}{rst}"
+            +zinit-message "{log-err} {ice}linkman{rst} Failed to install man page ${${${#failed}/1/}:+s}: ${(j:, :)failed}"
         fi
     fi
 fi
