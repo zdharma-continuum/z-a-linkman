@@ -10,29 +10,31 @@ else
 fi
 
 if (( ${+ICE[lman]} )); then
-    [[ -d ${ZPFX}/man/man1 ]] || {
-        +zinit-message "{w} linkman annex: Missing {url}${ZPFX}/man/man1{rst}, not installing man pages" && return
-    }
+    if [[ ! -d ${ZPFX}/man/man1 ]]; then
+        +zi-log "{w} {b}linkman annex{rst}: Missing {url}${ZPFX}/man/man1{rst}, not installing man pages" && return
+    fi
+
     local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
+
     for manfile in $~manfiles; do
         (( ${attempted[(I)$manfile:t]} )) && continue
         attempted+=($manfile:t)
-        {
-            test -f $manfile
-        } && {
-            command ln -f -- $manfile "${ZPFX}/man/man${${${manfile:t}//[!1-9]}[-1]}" && installed+=("{obj}$manfile:t")
-        } || {
+        if test -f $manfile; then 
+              command ln -f -- $manfile "${ZPFX}/man/man${${${manfile:t}//[!1-9]}[-1]}" && installed+=("{obj}$manfile:t")
+        else
             failed+=("{obj}$manfile:t")
-        }
+        fi
     done
 
     if (( !OPTS[opt_-q,--quiet] )); then
         if (( ${#installed} )); then
-            +zinit-message "{m} linkman annex: Installed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
+            +zi-log "{m} {b}linkman annex{rst}: Installed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
         fi
         if (( ${#failed} )); then
-            +zinit-message "{e} linkman annex: Failed to install man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
+            +zi-log "{e} {b}linkman annex{rst}: Failed to install man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
         fi
     fi
+
 fi
+
