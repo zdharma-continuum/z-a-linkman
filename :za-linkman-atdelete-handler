@@ -11,7 +11,7 @@ fi
 
 if (( ${+ICE[lman]} )); then
     if [[ ! -d ${ZPFX}/man/man1 ]]; then
-        +zinit-message "{w} linkman annex: Missing {url}${ZPFX}/man/man1{rst}, not deleting man page(s)" && return
+        +zinit-message "{w} {b}linkman{rst}: Missing {url}${ZPFX}/man/man1{rst}, not deleting man page(s)" && return
     fi
     local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
@@ -29,10 +29,10 @@ if (( ${+ICE[lman]} )); then
 
     if (( !OPTS[opt_-q,--quiet] )); then
         if (( ${#installed} )); then
-            +zinit-message "{m} linkman annex: Removed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
+            +zinit-message "{m} {b}linkman{rst}: Removed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
         fi
         if (( ${#failed} )); then
-            +zinit-message "{e} linkman annex: Failed to remove man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
+            +zinit-message "{e} {b}linkman{rst}: Failed to remove man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
         fi
     fi
 fi
