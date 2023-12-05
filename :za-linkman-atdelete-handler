@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-emulate -RL zsh
+emulate -LR zsh
 setopt extendedglob noshortloops typesetsilent warncreateglobal
 
 if [[ "$1" = plugin ]]; then
@@ -11,7 +11,8 @@ fi
 
 if (( ${+ICE[lman]} )); then
     if [[ ! -d ${ZPFX}/man/man1 ]]; then
-        +zinit-message "{w} {b}linkman{rst}: Missing {url}${ZPFX}/man/man1{rst}, not deleting man page(s)" && return
+        +zi-log "{w} {b}linkman{rst}: Missing {url}${ZPFX}/man/man1{rst}, not installing man pages"
+        return
     fi
     local manfiles=${dir}/**/*(.[1-9]|.[1-9].gz)(N.)
     declare -a manfile installed attempted failed
@@ -21,18 +22,18 @@ if (( ${+ICE[lman]} )); then
         {
             test -f $manfile
         } && {
-            command rm -f -- "${ZPFX}/man/man${${${manfile:t}//[!1-9]}[-1]}/$manfile:t" && installed+=("{obj}$manfile:t")
+            command rm -f -- "${ZPFX}/man/man${${${manfile:t}//[!1-9]}[-1]}/$manfile:t" && installed+=("{obj}${manfile:t}{rst}")
         } || {
-            failed+=("{obj}$manfile:t")
+            failed+=("{obj}${manfile:t}{rst}")
         }
     done
 
     if (( !OPTS[opt_-q,--quiet] )); then
         if (( ${#installed} )); then
-            +zinit-message "{m} {b}linkman{rst}: Removed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
+            +zi-log "{m} {b}linkman{rst}: Removed man page${${${#installed}/1/}:+s}: ${(j:, :)installed}"
         fi
         if (( ${#failed} )); then
-            +zinit-message "{e} {b}linkman{rst}: Failed to remove man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
+            +zi-log "{e} {b}linkman{rst}: Failed to remove man page${${${#failed}/1/}:+s}: ${(j:, :)failed}"
         fi
     fi
 fi
